@@ -31,7 +31,7 @@ const Footer = forwardRef<HTMLElement, FooterProps>((_, ref) => {
 				<p>
 					© {new Date().getFullYear()} {siteTitle}
 				</p>
-				<nav aria-label="Footer navigation">
+				{/* <nav aria-label="Footer navigation">
 					<ul className="flex flex-wrap gap-x-5 gap-y-2">
 						{footerLinks.map((link) => (
 							<li key={link.label}>
@@ -41,7 +41,7 @@ const Footer = forwardRef<HTMLElement, FooterProps>((_, ref) => {
 							</li>
 						))}
 					</ul>
-				</nav>
+				</nav> */}
 			</Container>
 		</footer>
 	);

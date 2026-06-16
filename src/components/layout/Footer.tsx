@@ -22,8 +22,8 @@ const footerLinks = [
 	{ label: 'Terms', href: '/terms' },
 ];
 
-const Footer = forwardRef<HTMLElement, FooterProps>(({ globals }, ref) => {
-	const siteTitle = globals?.title || 'Medium Clone';
+const Footer = forwardRef<HTMLElement, FooterProps>((_, ref) => {
+	const siteTitle = 'iyiblog';
 
 	return (
 		<footer ref={ref} className="border-t border-neutral-200 bg-white py-8 text-neutral-500">

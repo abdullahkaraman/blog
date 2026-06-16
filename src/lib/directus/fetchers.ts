@@ -429,8 +429,8 @@ export const fetchSiteData = async (): Promise<{
 		return {
 			globals: {
 				id: 'fallback',
-				title: 'Simple CMS',
-				description: 'A starter CMS template powered by Next.js and Directus.',
+				title: 'iyiblog',
+				description: 'iyiblog yazıları, fikirleri ve notları.',
 				accent_color: '#6644ff',
 			} satisfies SiteGlobals,
 			headerNavigation: {

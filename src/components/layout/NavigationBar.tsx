@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, forwardRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
 	NavigationMenu,
@@ -21,12 +20,10 @@ interface NavigationBarProps {
 	globals: any;
 }
 
-const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation, globals }, ref) => {
+const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation }, ref) => {
 	const [menuOpen, setMenuOpen] = useState(false);
 
-	const directusURL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
-	const lightLogoUrl = globals?.logo ? `${directusURL}/assets/${globals.logo}` : '/images/logo.svg';
-	const siteTitle = globals?.title || 'Medium Clone';
+	const siteTitle = 'iyiblog';
 
 	const handleLinkClick = () => {
 		setMenuOpen(false);
@@ -36,11 +33,7 @@ const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation,
 		<header ref={ref} className="sticky top-0 z-[60] w-full border-b border-neutral-200 bg-white text-neutral-950">
 			<Container className="flex h-16 items-center justify-between gap-4">
 				<Link href="/" className="flex min-w-0 flex-shrink-0 items-center gap-3">
-					{globals?.logo ? (
-						<Image src={lightLogoUrl} alt={siteTitle} width={120} height={48} className="h-8 w-auto" priority />
-					) : (
-						<span className="font-serif text-2xl text-neutral-950">{siteTitle}</span>
-					)}
+					<span className="font-serif text-2xl text-neutral-950">{siteTitle}</span>
 				</Link>
 
 				<nav className="flex min-w-0 items-center gap-3">

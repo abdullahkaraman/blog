@@ -11,8 +11,8 @@ import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
 export async function generateMetadata(): Promise<Metadata> {
 	const { globals } = await fetchSiteData();
 
-	const siteTitle = globals?.title || 'Simple CMS';
-	const siteDescription = globals?.description || 'A starter CMS template powered by Next.js and Directus.';
+	const siteTitle = 'iyiblog';
+	const siteDescription = globals?.description || 'iyiblog yazıları, fikirleri ve notları.';
 	const faviconURL = globals?.favicon ? getDirectusAssetURL(globals.favicon) : '/favicon.ico';
 
 	return {

@@ -429,6 +429,8 @@ export interface Post {
 	author?: DirectusUser | string | null;
 	/** @description Publish now or schedule for later. */
 	published_at?: string | null;
+	/** @description Estimated reading time in minutes, calculated from content. */
+	read_time?: number | null;
 	seo?: ExtensionSeoMetadata | null;
 	date_created?: string | null;
 	user_created?: DirectusUser | string | null;

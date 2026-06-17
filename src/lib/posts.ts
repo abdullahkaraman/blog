@@ -62,3 +62,9 @@ export function calculateReadTime(content?: string | null) {
 
 	return `${minutes} min read`;
 }
+
+export function formatReadTime(readTime?: number | null) {
+	if (!readTime) return null;
+
+	return `${Math.max(1, readTime)} min read`;
+}

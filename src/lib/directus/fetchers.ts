@@ -514,33 +514,36 @@ export const fetchPostBySlug = async (
 export const fetchHomepagePosts = async (limit = 9): Promise<Post[]> => {
 	const { directus } = useDirectus();
 	const token = getDirectusServerToken();
+	const baseFields = ['id', 'title', 'description', 'slug', 'image', 'published_at'] as const;
+	const authorField = {
+		author: ['id', 'first_name', 'last_name', 'email', 'avatar', 'description'],
+	};
 
-	try {
-		return (await directus.request(
+	const fetchPosts = (fields: any[]) =>
+		directus.request<Post[]>(
 			withToken(
 				token as string,
-				readItems('posts', {
+				readItems<Schema, 'posts', any>('posts', {
 					filter: { status: { _eq: 'published' } },
 					limit,
 					sort: ['-published_at', '-date_created'],
-					fields: [
-						'id',
-						'title',
-						'description',
-						'slug',
-						'image',
-						'published_at',
-						{
-							author: ['id', 'first_name', 'last_name', 'email', 'avatar', 'description'],
-						},
-					],
+					fields,
 				}),
 			),
-		)) as Post[];
+		) as Promise<Post[]>;
+
+	try {
+		return await fetchPosts([...baseFields, 'read_time', authorField]);
 	} catch (error) {
 		console.warn('Error fetching homepage posts:', formatDirectusError(error));
 
-		return [];
+		try {
+			return await fetchPosts([...baseFields, authorField]);
+		} catch (fallbackError) {
+			console.warn('Error fetching homepage posts without read_time:', formatDirectusError(fallbackError));
+
+			return [];
+		}
 	}
 };
 

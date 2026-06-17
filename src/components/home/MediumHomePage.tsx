@@ -5,8 +5,8 @@ import DirectusImage from '@/components/shared/DirectusImage';
 import Container from '@/components/ui/container';
 import type { Globals, Post } from '@/types/directus-schema';
 import {
-	calculateReadTime,
 	formatPostDate,
+	formatReadTime,
 	getAuthorAvatar,
 	getAuthorName,
 	getPostExcerpt,
@@ -23,17 +23,19 @@ type MediumHomePageProps = {
 const topics = ['Design Systems', 'Product', 'Software Engineering', 'Writing', 'Startups', 'Culture', 'AI'];
 
 function PostMeta({ post }: { post: PostWithAuthor }) {
+	const readTime = formatReadTime(post.read_time);
+
 	return (
 		<div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-neutral-500">
 			<span>{getAuthorName(post.author)}</span>
 			<span aria-hidden="true">·</span>
 			<span>{formatPostDate(post.published_at)}</span>
-			{post.content && (
+			{readTime && (
 				<>
 					<span aria-hidden="true">·</span>
 					<span className="inline-flex items-center gap-1">
 						<Clock3 className="size-3" />
-						{calculateReadTime(post.content)}
+						{readTime}
 					</span>
 				</>
 			)}

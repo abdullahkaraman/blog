@@ -1,7 +1,9 @@
 import { draftMode } from 'next/headers';
 
 import BlogPostArticle from '@/components/blog/BlogPostArticle';
+import { getDirectusServerToken, useDirectus } from '@/lib/directus/directus';
 import { fetchPostByIdAndVersion, fetchPostBySlug, getPostIdBySlug } from '@/lib/directus/fetchers';
+import { calculateReadTimeValue } from '@/lib/posts';
 import type { Post } from '@/types/directus-schema';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +14,22 @@ type PreviewSearchParams = {
 	token?: string;
 	version?: string;
 };
+
+function syncReadTime(post: Post, token: string) {
+	if (!post.id || !post.content) return;
+
+	const readTime = calculateReadTimeValue(post.content);
+
+	if (post.read_time === readTime) return;
+
+	const { directus, updateItem, withToken } = useDirectus();
+
+	void directus
+		.request(withToken(token, updateItem('posts', post.id, { read_time: readTime })))
+		.catch((error) => {
+			console.warn('Error syncing post read_time:', error instanceof Error ? error.message : String(error));
+		});
+}
 
 export default async function PreviewBlogPostPage({
 	params,
@@ -29,7 +47,7 @@ export default async function PreviewBlogPostPage({
 		return <div className="text-center text-xl mt-[20%]">401 - Preview Not Authorized</div>;
 	}
 
-	const serverToken = process.env.DIRECTUS_SERVER_TOKEN;
+	const serverToken = getDirectusServerToken();
 	const fixedVersion = version && version !== 'main' ? version : undefined;
 
 	try {
@@ -63,6 +81,8 @@ export default async function PreviewBlogPostPage({
 		if (!post) {
 			return <div className="text-center text-xl mt-[20%]">404 - Post Not Found</div>;
 		}
+
+		syncReadTime(post, serverToken);
 
 		return <BlogPostArticle post={post} relatedPosts={relatedPosts} slug={slug} />;
 	} catch (error) {

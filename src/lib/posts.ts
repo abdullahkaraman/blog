@@ -56,11 +56,14 @@ export function getPostExcerpt(post: Pick<Post, 'description' | 'content'>, maxL
 	return `${normalized.slice(0, maxLength).trim()}...`;
 }
 
-export function calculateReadTime(content?: string | null) {
+export function calculateReadTimeValue(content?: string | null) {
 	const words = stripHtml(content).split(/\s+/).filter(Boolean).length;
-	const minutes = Math.max(1, Math.ceil(words / 225));
 
-	return `${minutes} min read`;
+	return Math.ceil(words / 225) || 1;
+}
+
+export function calculateReadTime(content?: string | null) {
+	return `${calculateReadTimeValue(content)} min read`;
 }
 
 export function formatReadTime(readTime?: number | null) {

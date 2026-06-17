@@ -6,6 +6,7 @@ import {
 	rest,
 	readUser,
 	createItem,
+	updateItem,
 	uploadFiles,
 	withToken,
 } from '@directus/sdk';
@@ -92,6 +93,7 @@ export const useDirectus = () => ({
 	readSingleton,
 	readUser,
 	createItem,
+	updateItem,
 	uploadFiles,
 	withToken,
 });

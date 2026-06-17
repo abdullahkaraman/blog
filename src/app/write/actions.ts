@@ -4,7 +4,7 @@ import { createItem, withToken } from '@directus/sdk';
 import { redirect } from 'next/navigation';
 
 import { getDirectusServerToken, useDirectus } from '@/lib/directus/directus';
-import { stripHtml } from '@/lib/posts';
+import { calculateReadTimeValue, stripHtml } from '@/lib/posts';
 import { sanitizeHtml } from '@/lib/rich-text';
 import type { Post } from '@/types/directus-schema';
 
@@ -44,6 +44,7 @@ export async function publishPostAction(_state: WriteActionState, formData: Form
 		slug,
 		content,
 		description: stripHtml(content).slice(0, 180),
+		read_time: calculateReadTimeValue(content),
 		status,
 		published_at: status === 'published' ? new Date().toISOString() : null,
 	} satisfies Partial<Post>;

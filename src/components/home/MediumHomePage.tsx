@@ -28,11 +28,15 @@ function PostMeta({ post }: { post: PostWithAuthor }) {
 			<span>{getAuthorName(post.author)}</span>
 			<span aria-hidden="true">·</span>
 			<span>{formatPostDate(post.published_at)}</span>
-			<span aria-hidden="true">·</span>
-			<span className="inline-flex items-center gap-1">
-				<Clock3 className="size-3" />
-				{calculateReadTime(post.content)}
-			</span>
+			{post.content && (
+				<>
+					<span aria-hidden="true">·</span>
+					<span className="inline-flex items-center gap-1">
+						<Clock3 className="size-3" />
+						{calculateReadTime(post.content)}
+					</span>
+				</>
+			)}
 		</div>
 	);
 }

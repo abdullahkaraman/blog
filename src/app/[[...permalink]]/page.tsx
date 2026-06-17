@@ -10,6 +10,8 @@ import { notFound } from 'next/navigation';
 import PageClient from './PageClient';
 import MediumHomePage from '@/components/home/MediumHomePage';
 
+export const revalidate = 300;
+
 export async function generateMetadata({
 	params,
 	searchParams,

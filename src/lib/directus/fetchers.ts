@@ -2,6 +2,7 @@ import { BlockPost, Globals, Page, PageBlock, Post, Redirect, Schema } from '@/t
 import { getDirectusServerToken, useDirectus } from './directus';
 import { readItems, aggregate, readItem, readSingleton, withToken, QueryFilter } from '@directus/sdk';
 import { RedirectError } from '../redirects';
+import { cache } from 'react';
 
 /**
  * Page fields configuration for Directus queries
@@ -359,7 +360,7 @@ export const fetchPostByIdAndVersion = async (
 /**
  * Fetches global site data, header navigation, and footer navigation.
  */
-export const fetchSiteData = async (): Promise<{
+export const fetchSiteData = cache(async (): Promise<{
 	globals: SiteGlobals;
 	headerNavigation: SiteNavigation;
 	footerNavigation: SiteNavigation;
@@ -445,7 +446,7 @@ export const fetchSiteData = async (): Promise<{
 			} satisfies SiteNavigation,
 		};
 	}
-};
+});
 
 /**
  * Fetches a single blog post by slug and related blog posts excluding the given ID. Handles live preview mode.
@@ -526,7 +527,6 @@ export const fetchHomepagePosts = async (limit = 9): Promise<Post[]> => {
 						'id',
 						'title',
 						'description',
-						'content',
 						'slug',
 						'image',
 						'published_at',

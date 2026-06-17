@@ -15,8 +15,45 @@ import type { Schema } from '@/types/directus-schema';
 
 // Helper for retrying fetch requests
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const DIRECTUS_REVALIDATE_SECONDS = 300;
+
+type NextFetchInit = RequestInit & {
+	next?: {
+		revalidate?: number | false;
+		tags?: string[];
+	};
+};
+
+const getRequestMethod = (input: RequestInfo | URL, init?: RequestInit) => {
+	if (init?.method) return init.method.toUpperCase();
+	if (input instanceof Request) return input.method.toUpperCase();
+
+	return 'GET';
+};
+
+const withDirectusCache = (input: RequestInfo | URL, init?: RequestInit): Parameters<typeof fetch> => {
+	const method = getRequestMethod(input, init);
+
+	if (method !== 'GET' && method !== 'HEAD') {
+		return init ? [input, init] : [input];
+	}
+
+	const nextInit = init as NextFetchInit | undefined;
+
+	return [
+		input,
+		{
+			...init,
+			next: {
+				...nextInit?.next,
+				revalidate: nextInit?.next?.revalidate ?? DIRECTUS_REVALIDATE_SECONDS,
+			},
+		} satisfies NextFetchInit,
+	];
+};
+
 const fetchRetry = async (count: number, ...args: Parameters<typeof fetch>) => {
-	const response = await fetch(...args);
+	const response = await fetch(...withDirectusCache(...args));
 
 	if (count > 2 || response.status !== 429) return response;
 
